@@ -48,6 +48,8 @@ patterns:
   Commits-compliant messages from `git diff`
 - **[pr/](patterns/pr/)** – Draft concise, informative pull request
   descriptions from changes
+- **[go-tests/](patterns/go-tests/)** – Generate simple, pragmatic table-driven
+  tests for Go code following Go idioms and best practices
 
 Each pattern directory contains:
 
@@ -67,6 +69,12 @@ fabric run --system ./patterns/commit/system.md --input ./my-diff.txt
 
 ```bash
 fabric run --system ./patterns/pr/system.md --input ./my-diff.txt
+```
+
+### Go Tests Pattern
+
+```bash
+fabric run --system ./patterns/go-tests/system.md --input ./my-go-file.go
 ```
 
 ---
