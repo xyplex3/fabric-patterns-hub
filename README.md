@@ -17,12 +17,12 @@ cd fabric-patterns-hub
 
 1. Locate a Pattern
 
-Patterns are stored under `custom-patterns/<pattern-name>/system.md`.
+Patterns are stored under `patterns/<pattern-name>/system.md`.
 
 Example:
 
-- **Commit message generation**: `custom-patterns/commit/system.md`
-- **Pull request description generation**: `custom-patterns/pr/system.md`
+- **Commit message generation**: `patterns/commit/system.md`
+- **Pull request description generation**: `patterns/pr/system.md`
 
 1. Use in Fabric
 
@@ -33,9 +33,9 @@ Example:
 ```yaml
 patterns:
   commit:
-    system: ./custom-patterns/commit/system.md
+    system: ./patterns/commit/system.md
   pr:
-    system: ./custom-patterns/pr/system.md
+    system: ./patterns/pr/system.md
 ```
 
 ---
@@ -44,9 +44,9 @@ patterns:
 
 ### 📚 Pattern Categories
 
-- **[commit/](custom-patterns/commit/)** – Generate clear, Conventional
+- **[commit/](patterns/commit/)** – Generate clear, Conventional
   Commits-compliant messages from `git diff`
-- **[pr/](custom-patterns/pr/)** – Draft concise, informative pull request
+- **[pr/](patterns/pr/)** – Draft concise, informative pull request
   descriptions from changes
 
 Each pattern directory contains:
@@ -60,13 +60,13 @@ Each pattern directory contains:
 ### Commit Pattern
 
 ```bash
-fabric run --system ./custom-patterns/commit/system.md --input ./my-diff.txt
+fabric run --system ./patterns/commit/system.md --input ./my-diff.txt
 ```
 
 ### Pull Request Pattern
 
 ```bash
-fabric run --system ./custom-patterns/pr/system.md --input ./my-diff.txt
+fabric run --system ./patterns/pr/system.md --input ./my-diff.txt
 ```
 
 ---
@@ -77,7 +77,7 @@ We welcome new patterns and improvements!
 To contribute:
 
 1. Fork the repository
-1. Create a new pattern under `custom-patterns/<pattern-name>/`
+1. Create a new pattern under `patterns/<pattern-name>/`
 1. Add at least:
 
    - `system.md` (required)
