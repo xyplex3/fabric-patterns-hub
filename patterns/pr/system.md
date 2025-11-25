@@ -55,7 +55,6 @@ Use these standard types:
 
 # OUTPUT FORMAT
 
-```
 <type>: <brief title in present tense, lowercase, no period>
 
 **Key Changes:**
@@ -78,11 +77,9 @@ Use these standard types:
 
 - <description of what was removed> - <brief file reference if needed>
 - <another logical removal>
-```
 
 # EXAMPLE OUTPUT
 
-```
 feat: add dynamic device configuration management
 
 **Key Changes:**
@@ -113,7 +110,6 @@ feat: add dynamic device configuration management
   `config.yaml` and viper configuration
 - Manual device ID management - Eliminated need for manual device ID
   configuration for shades and other devices
-```
 
 # INPUT
 

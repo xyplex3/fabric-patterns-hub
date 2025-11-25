@@ -51,7 +51,6 @@ Use these standard types:
 
 # OUTPUT FORMAT
 
-```
 <type>: <brief description in present tense, lowercase, no period>
 
 **Added:** (omit this section if nothing was added)
@@ -68,11 +67,9 @@ Use these standard types:
 
 - <description of what was removed> - <brief file reference if needed>
 - <another logical removal>
-```
 
 # EXAMPLE OUTPUT
 
-```
 feat: add new asdf role with tests and linting
 
 **Added:**
@@ -99,7 +96,6 @@ feat: add new asdf role with tests and linting
 - Removed old files in preparation for later refactoring.
 - Windows Support for asdf role - Removed Windows support
   from `roles/asdf/README.md` as it is not supported in the tasks.
-```
 
 # INPUT
 
