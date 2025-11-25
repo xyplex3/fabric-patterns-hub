@@ -31,6 +31,8 @@ Use these standard types:
 
 # OUTPUT INSTRUCTIONS
 
+- Output ONLY the commit message text with NO code blocks or markdown fences
+- Do NOT wrap the output in ``` ``` or any other delimiters
 - Start with a type from the list above and a colon, then a space
 - Follow with a brief description in present tense (e.g., "add" not "added")
 - Keep the summary line under 80 characters
@@ -40,13 +42,14 @@ Use these standard types:
 - **IMPORTANT**: Only include sections where there are actual changes - if
   nothing was removed, omit the "Removed:" section entirely (do not include
   it with "No features or code were removed")
+- **ONLY use the three sections: Added, Changed, Removed - NO other sections**
+- **DO NOT create Why, Motivation, Rationale, or any other custom sections**
 - **DO NOT repeat file names in multiple bullet points**
 - **Group all changes to the same file into a single, comprehensive bullet point**
 - **Lead with the conceptual change, not the file name**
 - Use bullet points for each logical change or feature, not for each file
 - Mention files only when necessary for context
-- Explain the 'why' behind changes when it's not obvious
-- Each line should be maximum 80 characters (wrap longer lines)
+- Explain the 'why' behind changes when it's not obvious WITHIN the bullet points
 - Be specific and technical but concise
 
 # OUTPUT FORMAT
