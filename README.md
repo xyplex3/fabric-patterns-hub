@@ -36,6 +36,8 @@ patterns:
     system: ./patterns/commit/system.md
   pr:
     system: ./patterns/pr/system.md
+  readme:
+    system: ./patterns/readme/system.md
 ```
 
 ---
@@ -52,6 +54,8 @@ patterns:
   Commits-compliant messages from `git diff`
 - **[pr/](patterns/pr/)** – Draft concise, informative pull request
   descriptions from changes
+- **[readme/](patterns/readme/)** – Generate comprehensive, well-structured
+  README documentation for GitHub repositories following best practices
 
 #### Go-Specific Patterns
 
@@ -88,6 +92,12 @@ fabric run --system ./patterns/commit/system.md --input ./my-diff.txt
 
 ```bash
 fabric run --system ./patterns/pr/system.md --input ./my-diff.txt
+```
+
+### README Pattern
+
+```bash
+fabric run --system ./patterns/readme/system.md --input ./project-info.txt
 ```
 
 ### Go Tests Pattern
