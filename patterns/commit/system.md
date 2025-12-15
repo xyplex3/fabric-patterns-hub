@@ -32,18 +32,23 @@ Use these standard types:
 # OUTPUT INSTRUCTIONS
 
 - Output ONLY the commit message text with NO code blocks or markdown fences
-- Do NOT wrap the output in ``` ``` or any other delimiters
+- Do NOT wrap the output in ``` ```, backticks, or any other delimiters
+- Do NOT use code formatting or syntax highlighting markers
+- Output plain text with markdown formatting ONLY (bold, bullets, etc.)
 - Start with a type from the list above and a colon, then a space
 - Follow with a brief description in present tense (e.g., "add" not "added")
 - Keep the summary line under 80 characters
 - Use lowercase for the description after the type
 - Don't end the summary with a period
 - After a blank line, add sections for Added, Changed, and Removed
-- **IMPORTANT**: Only include sections where there are actual changes - if
-  nothing was removed, omit the "Removed:" section entirely (do not include
-  it with "No features or code were removed")
+- **CRITICAL**: Only include sections where there are actual changes
+- **If nothing was added, DO NOT include the "Added:" section at all**
+- **If nothing was changed, DO NOT include the "Changed:" section at all**
+- **If nothing was removed, DO NOT include the "Removed:" section at all**
+- **NEVER write placeholder text like "No content removed", "No features added", or "Nothing removed"**
+- **Completely omit empty sections - do not mention them**
 - **ONLY use the three sections: Added, Changed, Removed - NO other sections**
-- **DO NOT create Why, Motivation, Rationale, or any other custom sections**
+- **DO NOT create Why, Motivation, Rationale, Notes, or any other custom sections**
 - **DO NOT repeat file names in multiple bullet points**
 - **Group all changes to the same file into a single, comprehensive bullet point**
 - **Lead with the conceptual change, not the file name**
@@ -56,20 +61,28 @@ Use these standard types:
 
 <type>: <brief description in present tense, lowercase, no period>
 
-**Added:** (omit this section if nothing was added)
+**Added:** (omit this entire section if nothing was added)
 
 - <description of what was added> - <brief file reference if needed>
 - <another logical addition>
 
-**Changed:** (omit this section if nothing was changed)
+**Changed:** (omit this entire section if nothing was changed)
 
 - <description of what changed> - <brief file reference if needed>
 - <another logical change>
 
-**Removed:** (omit this section if nothing was removed)
+**Removed:** (omit this entire section if nothing was removed)
 
 - <description of what was removed> - <brief file reference if needed>
 - <another logical removal>
+
+# IMPORTANT NOTES
+
+- The commit message body is OPTIONAL - only include it if there are multiple
+  significant changes that need explanation
+- For simple changes (one file, obvious purpose), the summary line may be
+  sufficient
+- Do NOT add a body with sections if the summary line tells the complete story
 
 # EXAMPLE OUTPUT
 
