@@ -13,13 +13,15 @@ output=$(echo "$output" | sed -E '/\*\*Added:\*\*/,/^$/{ /[Nn]o (content|feature
 output=$(echo "$output" | sed -E '/\*\*Changed:\*\*/,/^$/{ /[Nn]o (content|features|code|changes)/d; /[Nn]othing (changed|was changed)/d; }')
 output=$(echo "$output" | sed -E '/\*\*Removed:\*\*/,/^$/{ /[Nn]o (content|features|code|changes)/d; /[Nn]othing (removed|was removed)/d; }')
 
-# Remove section headers that have no content following them
+# Remove section headers that have no content following them and merge duplicate sections
 output=$(echo "$output" | awk '
 BEGIN {
-    in_section=0
-    section_header=""
-    buffer=""
     first_line=1
+    added_buffer=""
+    changed_buffer=""
+    removed_buffer=""
+    other_content=""
+    current_section=""
 }
 
 # Keep the summary line (first non-empty line)
@@ -31,33 +33,57 @@ NR==1 || (first_line && NF>0) {
     next
 }
 
-# Detect section headers
-/^\*\*Added:\*\*/ || /^\*\*Changed:\*\*/ || /^\*\*Removed:\*\*/ {
-    # Print previous section if it had content
-    if (in_section && buffer !~ /^[[:space:]]*$/) {
-        print section_header
-        printf "%s", buffer
-    }
-    section_header=$0
-    buffer=""
-    in_section=1
+# Detect section headers and accumulate content
+/^\*\*Added:\*\*/ {
+    current_section="added"
+    next
+}
+
+/^\*\*Changed:\*\*/ {
+    current_section="changed"
+    next
+}
+
+/^\*\*Removed:\*\*/ {
+    current_section="removed"
     next
 }
 
 # Collect content for current section
 {
-    if (in_section) {
-        buffer=buffer $0 "\n"
+    if (current_section == "added") {
+        added_buffer=added_buffer $0 "\n"
+    } else if (current_section == "changed") {
+        changed_buffer=changed_buffer $0 "\n"
+    } else if (current_section == "removed") {
+        removed_buffer=removed_buffer $0 "\n"
     } else {
-        print $0
+        other_content=other_content $0 "\n"
     }
 }
 
 END {
-    # Print last section if it had content
-    if (in_section && buffer !~ /^[[:space:]]*$/) {
-        print section_header
-        printf "%s", buffer
+    # Print any non-section content first
+    if (other_content !~ /^[[:space:]]*$/) {
+        printf "%s", other_content
+    }
+
+    # Print Added section if it has content
+    if (added_buffer !~ /^[[:space:]]*$/) {
+        print "**Added:**"
+        printf "%s", added_buffer
+    }
+
+    # Print Changed section if it has content
+    if (changed_buffer !~ /^[[:space:]]*$/) {
+        print "**Changed:**"
+        printf "%s", changed_buffer
+    }
+
+    # Print Removed section if it has content
+    if (removed_buffer !~ /^[[:space:]]*$/) {
+        print "**Removed:**"
+        printf "%s", removed_buffer
     }
 }
 ')

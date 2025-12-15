@@ -13,45 +13,96 @@ output=$(echo "$output" | sed -E '/\*\*Added:\*\*/,/^$/{ /No (content|features|c
 output=$(echo "$output" | sed -E '/\*\*Changed:\*\*/,/^$/{ /No (content|features|code|changes)/d; /Nothing (changed|was changed)/d; }')
 output=$(echo "$output" | sed -E '/\*\*Removed:\*\*/,/^$/{ /No (content|features|code|changes)/d; /Nothing (removed|was removed)/d; }')
 
-# Remove section headers that have no content following them (up to next section or end)
+# Remove section headers that have no content following them and merge duplicate sections
 output=$(echo "$output" | awk '
-BEGIN { in_section=0; section_name=""; buffer="" }
-/^\*\*Added:\*\*/ || /^\*\*Changed:\*\*/ || /^\*\*Removed:\*\*/ {
-    if (in_section && buffer ~ /^[[:space:]]*$/) {
-        # Previous section was empty, skip it
-        buffer=""
-    } else if (in_section) {
-        print section_header
-        printf "%s", buffer
-    }
-    section_header=$0
-    buffer=""
-    in_section=1
-    next
+BEGIN {
+    first_line=1
+    key_changes_buffer=""
+    added_buffer=""
+    changed_buffer=""
+    removed_buffer=""
+    other_content=""
+    current_section=""
+    in_key_changes=0
 }
-/^\*\*Key Changes:\*\*/ {
-    if (in_section && buffer ~ /^[[:space:]]*$/) {
-        buffer=""
-    } else if (in_section) {
-        print section_header
-        printf "%s", buffer
-    }
-    print $0
-    in_section=0
-    buffer=""
-    next
-}
-{
-    if (in_section) {
-        buffer=buffer $0 "\n"
-    } else {
+
+# Keep the title line (first non-empty line)
+NR==1 || (first_line && NF>0) {
+    if (first_line) {
         print $0
+        first_line=0
+    }
+    next
+}
+
+# Detect section headers and accumulate content
+/^\*\*Key Changes:\*\*/ {
+    current_section="key_changes"
+    in_key_changes=1
+    next
+}
+
+/^\*\*Added:\*\*/ {
+    current_section="added"
+    in_key_changes=0
+    next
+}
+
+/^\*\*Changed:\*\*/ {
+    current_section="changed"
+    in_key_changes=0
+    next
+}
+
+/^\*\*Removed:\*\*/ {
+    current_section="removed"
+    in_key_changes=0
+    next
+}
+
+# Collect content for current section
+{
+    if (current_section == "key_changes") {
+        key_changes_buffer=key_changes_buffer $0 "\n"
+    } else if (current_section == "added") {
+        added_buffer=added_buffer $0 "\n"
+    } else if (current_section == "changed") {
+        changed_buffer=changed_buffer $0 "\n"
+    } else if (current_section == "removed") {
+        removed_buffer=removed_buffer $0 "\n"
+    } else {
+        other_content=other_content $0 "\n"
     }
 }
+
 END {
-    if (in_section && buffer !~ /^[[:space:]]*$/) {
-        print section_header
-        printf "%s", buffer
+    # Print any non-section content first (after title)
+    if (other_content !~ /^[[:space:]]*$/) {
+        printf "%s", other_content
+    }
+
+    # Print Key Changes section if it has content
+    if (key_changes_buffer !~ /^[[:space:]]*$/) {
+        print "**Key Changes:**"
+        printf "%s", key_changes_buffer
+    }
+
+    # Print Added section if it has content
+    if (added_buffer !~ /^[[:space:]]*$/) {
+        print "**Added:**"
+        printf "%s", added_buffer
+    }
+
+    # Print Changed section if it has content
+    if (changed_buffer !~ /^[[:space:]]*$/) {
+        print "**Changed:**"
+        printf "%s", changed_buffer
+    }
+
+    # Print Removed section if it has content
+    if (removed_buffer !~ /^[[:space:]]*$/) {
+        print "**Removed:**"
+        printf "%s", removed_buffer
     }
 }
 ')
