@@ -22,6 +22,7 @@ BEGIN {
     removed_buffer=""
     other_content=""
     current_section=""
+    first_section=1
 }
 
 # Keep the summary line (first non-empty line)
@@ -70,18 +71,33 @@ END {
 
     # Print Added section if it has content
     if (added_buffer !~ /^[[:space:]]*$/) {
+        # Ensure blank line before first section
+        if (first_section) {
+            print ""
+            first_section=0
+        }
         print "**Added:**"
         printf "%s", added_buffer
     }
 
     # Print Changed section if it has content
     if (changed_buffer !~ /^[[:space:]]*$/) {
+        # Ensure blank line before first section
+        if (first_section) {
+            print ""
+            first_section=0
+        }
         print "**Changed:**"
         printf "%s", changed_buffer
     }
 
     # Print Removed section if it has content
     if (removed_buffer !~ /^[[:space:]]*$/) {
+        # Ensure blank line before first section
+        if (first_section) {
+            print ""
+            first_section=0
+        }
         print "**Removed:**"
         printf "%s", removed_buffer
     }

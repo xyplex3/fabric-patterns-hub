@@ -24,6 +24,7 @@ BEGIN {
     other_content=""
     current_section=""
     in_key_changes=0
+    first_section=1
 }
 
 # Keep the title line (first non-empty line)
@@ -83,24 +84,44 @@ END {
 
     # Print Key Changes section if it has content
     if (key_changes_buffer !~ /^[[:space:]]*$/) {
+        # Ensure blank line before first section
+        if (first_section) {
+            print ""
+            first_section=0
+        }
         print "**Key Changes:**"
         printf "%s", key_changes_buffer
     }
 
     # Print Added section if it has content
     if (added_buffer !~ /^[[:space:]]*$/) {
+        # Ensure blank line before first section
+        if (first_section) {
+            print ""
+            first_section=0
+        }
         print "**Added:**"
         printf "%s", added_buffer
     }
 
     # Print Changed section if it has content
     if (changed_buffer !~ /^[[:space:]]*$/) {
+        # Ensure blank line before first section
+        if (first_section) {
+            print ""
+            first_section=0
+        }
         print "**Changed:**"
         printf "%s", changed_buffer
     }
 
     # Print Removed section if it has content
     if (removed_buffer !~ /^[[:space:]]*$/) {
+        # Ensure blank line before first section
+        if (first_section) {
+            print ""
+            first_section=0
+        }
         print "**Removed:**"
         printf "%s", removed_buffer
     }
