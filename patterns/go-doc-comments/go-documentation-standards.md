@@ -373,6 +373,80 @@ Start paragraph with `Deprecated:` - tools warn on usage.
 
 Format: `MARKER(uid): description`
 
+### Directives
+
+```go
+// Op represents a regex operator.
+//
+//go:generate stringer -type Op
+type Op uint8
+```
+
+**Rules:**
+- gofmt moves directives after blank line at end of comment
+- Not part of godoc output
+- Common directives: `//go:generate`, `//go:embed`, `//go:build`
+
+---
+
+## Tools and Automation
+
+### gofmt
+
+Automatically formats doc comments:
+- Normalizes list indentation (converts `*`, `+`, `•` to `-`)
+- Converts backticks and quotes to Unicode
+- Removes common indentation prefix
+- Adds blank lines around code blocks
+- Moves link definitions and directives to end of comment
+
+```bash
+gofmt -w .
+```
+
+### go doc
+
+View formatted documentation in terminal:
+
+```bash
+go doc pkgname           # Package documentation
+go doc pkgname.TypeName  # Type documentation
+go doc pkgname.FuncName  # Function documentation
+```
+
+### godoc-lint
+
+Linter for doc comment consistency (validates against Go Doc Comments spec):
+
+```bash
+go install golang.org/x/tools/cmd/godoc-lint@latest
+godoc-lint ./...
+```
+
+### pkg.go.dev
+
+Online documentation rendering at https://pkg.go.dev - automatically extracts and renders doc comments for public packages.
+
+---
+
+## Signal Boosting Comments
+
+From Google Style Guide: add clarifying comments for unusual patterns that might confuse readers.
+
+**Example - unusual condition:**
+```go
+if err == nil {
+    // if NO error, proceed with cleanup
+    return cleanup()
+}
+```
+
+**When to add signal boosting:**
+- Unusual control flow (checking for success instead of failure)
+- Non-obvious side effects
+- Intentionally empty blocks
+- Counter-intuitive logic
+
 ---
 
 ## Quality Checklist
@@ -409,6 +483,8 @@ Format: `MARKER(uid): description`
 - [Effective Go - Commentary](https://go.dev/doc/effective_go#commentary)
 - [Go Code Review Comments](https://go.dev/wiki/CodeReviewComments#doc-comments)
 - [Go Blog - Godoc](https://go.dev/blog/godoc)
+- [Google Go Style Guide](https://google.github.io/styleguide/go/)
+- [Google Go Best Practices](https://google.github.io/styleguide/go/best-practices)
 
 ---
 

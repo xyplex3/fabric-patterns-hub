@@ -53,6 +53,24 @@ Don't communicate by sharing memory; use channels to coordinate goroutines.
 | Short, meaningful names | LOW | Readability |
 | Package names lowercase, concise | MEDIUM | Avoid util, common, helpers |
 
+### Import Organization
+
+Imports should be in three groups separated by blank lines:
+
+```go
+import (
+    // Standard library
+    "context"
+    "fmt"
+
+    // Third-party packages
+    "github.com/gin-gonic/gin"
+
+    // Local packages
+    "yourproject/internal/handlers"
+)
+```
+
 ### Naming Conventions
 
 **Good:**
@@ -460,6 +478,14 @@ db.Query("SELECT * FROM users WHERE id = " + userID)  // SQL injection!
 | Unit tests | 70%+ | HIGH |
 | Integration tests | Critical paths | MEDIUM |
 | Benchmark tests | Hot paths | LOW |
+
+### Testing Tools (2025)
+
+| Tool | Adoption | Use Case |
+|------|----------|----------|
+| `testing` (stdlib) | Most common | Built-in testing package |
+| [testify](https://github.com/stretchr/testify) | 27% | Assertions and mocking |
+| [gomock](https://github.com/uber-go/mock) | 21% | Enterprise mock generation |
 
 ### Test Quality
 

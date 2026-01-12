@@ -771,6 +771,68 @@ These patterns have tradeoffs:
 
 ---
 
+## Modern Go Ecosystem (2025)
+
+### Import Organization
+
+Always organize imports in three groups separated by blank lines:
+
+```go
+// Standard library
+import (
+    "context"
+    "fmt"
+)
+
+// Third-party packages
+import (
+    "github.com/gin-gonic/gin"
+)
+
+// Local packages
+import (
+    "yourproject/internal/handlers"
+)
+```
+
+### Web Frameworks
+
+| Framework | Adoption | Use Case |
+|-----------|----------|----------|
+| [Gin](https://github.com/gin-gonic/gin) | 48% | Most popular, full-featured |
+| [Echo](https://github.com/labstack/echo) | 16% | Minimalist, high performance |
+| [Fiber](https://github.com/gofiber/fiber) | 11% | Express-inspired, fast-growing |
+| net/http (Go 1.22+) | - | Standard library with pattern routing |
+
+### Testing Tools
+
+| Tool | Adoption | Purpose |
+|------|----------|---------|
+| `testing` (stdlib) | Most common | Built-in testing package |
+| [testify](https://github.com/stretchr/testify) | 27% | Assertions and mocking |
+| [gomock](https://github.com/uber-go/mock) | 21% | Enterprise mock generation |
+
+### Common Libraries
+
+| Category | Library | Notes |
+|----------|---------|-------|
+| Logging | `log/slog` | Use for new projects (structured logging) |
+| Configuration | [viper](https://github.com/spf13/viper) | Industry standard |
+| ORM | [GORM](https://gorm.io/) | Most popular ORM |
+| CLI (complex) | [cobra](https://github.com/spf13/cobra) | Feature-rich CLI framework |
+| CLI (lightweight) | [urfave/cli](https://github.com/urfave/cli) | Simple CLI apps |
+| Kubernetes | `k8s.io/client-go`, `controller-runtime` | Infrastructure tooling |
+
+### Development Environment
+
+| Tool | Preference |
+|------|------------|
+| GoLand IDE | 47% |
+| VS Code + Go extension | Popular alternative |
+| AI coding assistants | 70%+ developers use |
+
+---
+
 ## Quick Reference Checklist
 
 When refactoring Go code, check for:
