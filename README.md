@@ -132,13 +132,19 @@ We welcome new patterns and improvements!
 To contribute:
 
 1. Fork the repository
+1. Read the **[Pattern Creation Guide](docs/PATTERN_GUIDE.md)** for quality standards
 1. Create a new pattern under `patterns/<pattern-name>/`
 1. Add at least:
 
    - `system.md` (required)
+   - `filter.sh` for output cleanup _(recommended)_
+   - `README.md` with usage examples _(recommended)_
    - `examples/` folder with sample inputs/outputs _(optional but encouraged)_
 
 1. Submit a pull request
+
+See [docs/PATTERN_GUIDE.md](docs/PATTERN_GUIDE.md) for comprehensive guidance on
+creating high-quality patterns, including templates and checklists.
 
 ---
 
