@@ -1,14 +1,9 @@
-#!/bin/bash
-# Test script for validating the python-tests pattern
-#
-# Usage: ./test-pattern.sh
-#
-# This script:
-# 1. Checks if fabric is installed
-# 2. Runs the pattern against test-code.py
-# 3. Validates the output contains expected elements
+#!/usr/bin/env bash
 
-set -e
+# Test script for python-tests pattern
+# Validates the pattern works correctly with sample input
+
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEST_INPUT="$SCRIPT_DIR/test-code.py"

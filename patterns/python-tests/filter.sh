@@ -1,13 +1,9 @@
-#!/bin/bash
-# Filter script to clean up LLM output for Python test files
-#
-# Usage: cat output.txt | ./filter.sh > clean_output.py
-#
-# This script:
-# - Removes markdown code fences
-# - Cleans leading/trailing whitespace
-# - Removes introductory phrases
-# - Ensures proper formatting
+#!/usr/bin/env bash
+
+# Filter script for python-tests pattern
+# Cleans up LLM output to ensure consistent formatting
+
+set -euo pipefail
 
 # Read all input
 input=$(cat)
