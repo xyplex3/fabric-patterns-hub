@@ -5,13 +5,17 @@
 # Read input from stdin
 input=$(cat)
 
+# Strip leading blank lines (fixes GitHub showing "Commit {sha} pushed by {user}")
+input=$(echo "$input" | sed '/./,$!d')
+
 # Remove code block markers (backticks)
 output="${input//\`\`\`/}"
 
-# Remove empty sections with placeholder text (case-insensitive)
-output=$(echo "$output" | sed -E '/\*\*Added:\*\*/,/^$/{ /[Nn]o (content|features|code|changes)/d; /[Nn]othing (added|was added)/d; }')
-output=$(echo "$output" | sed -E '/\*\*Changed:\*\*/,/^$/{ /[Nn]o (content|features|code|changes)/d; /[Nn]othing (changed|was changed)/d; }')
-output=$(echo "$output" | sed -E '/\*\*Removed:\*\*/,/^$/{ /[Nn]o (content|features|code|changes)/d; /[Nn]othing (removed|was removed)/d; }')
+# Strip leading blank lines again (backtick removal can create new ones)
+output=$(echo "$output" | sed '/./,$!d')
+
+# Remove empty sections with placeholder text
+output=$(echo "$output" | sed -E '/^[[:space:]]*(No |Nothing )(content|features|code|changes|added|was added|changed|was changed|removed|was removed)/Id')
 
 # Remove section headers that have no content following them and merge duplicate sections
 output=$(echo "$output" | awk '
@@ -71,37 +75,33 @@ END {
 
     # Print Added section if it has content
     if (added_buffer !~ /^[[:space:]]*$/) {
-        # Ensure blank line before first section
-        if (first_section) {
-            print ""
-            first_section=0
-        }
+        if (first_section) { print ""; first_section=0 }
         print "**Added:**"
         printf "%s", added_buffer
     }
 
     # Print Changed section if it has content
     if (changed_buffer !~ /^[[:space:]]*$/) {
-        # Ensure blank line before first section
-        if (first_section) {
-            print ""
-            first_section=0
-        }
+        if (first_section) { print ""; first_section=0 }
         print "**Changed:**"
         printf "%s", changed_buffer
     }
 
     # Print Removed section if it has content
     if (removed_buffer !~ /^[[:space:]]*$/) {
-        # Ensure blank line before first section
-        if (first_section) {
-            print ""
-            first_section=0
-        }
+        if (first_section) { print ""; first_section=0 }
         print "**Removed:**"
         printf "%s", removed_buffer
     }
 }
+')
+
+# Ensure exactly one blank line between title (line 1) and body
+# per git commit message conventions
+output=$(echo "$output" | awk '
+NR==1 { print; next }
+NR==2 && /^[[:space:]]*$/ { next }
+{ if (!body_started) { print ""; body_started=1 } print }
 ')
 
 # Clean up excessive blank lines (max 2 consecutive)
