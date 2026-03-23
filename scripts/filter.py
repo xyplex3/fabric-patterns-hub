@@ -219,6 +219,7 @@ def merge_sections(text: str, section_names: list[str]) -> str:
         if content:
             parts.append("")
             parts.append(f"**{name}:**")
+            parts.append("")
             parts.append(content)
 
     return "\n".join(parts)
