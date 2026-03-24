@@ -88,8 +88,14 @@ def collapse_blank_lines(text: str, max_consecutive: int = 1) -> str:
     return "\n".join(result)
 
 
-def ensure_blank_after_title(text: str) -> str:
-    """Ensure exactly one blank line between the first line and the body."""
+def ensure_blank_after_title(text: str, blank_after_title: bool = True) -> str:
+    """Normalize spacing between the first line and the body.
+
+    Args:
+        blank_after_title: If True, insert one blank line after the title (for
+            git commit messages). If False, place the body immediately after
+            the title with no blank line (for PR descriptions).
+    """
     lines = text.split("\n")
     if len(lines) < 2:
         return text
@@ -99,7 +105,8 @@ def ensure_blank_after_title(text: str) -> str:
     while rest and not rest[0].strip():
         rest.pop(0)
     if rest:
-        return title + "\n\n" + "\n".join(rest)
+        sep = "\n\n" if blank_after_title else "\n"
+        return title + sep + "\n".join(rest)
     return title
 
 
@@ -214,10 +221,13 @@ def merge_sections(text: str, section_names: list[str]) -> str:
         parts.append(other_text)
 
     # Sections with content
+    first_section = True
     for name in section_names:
         content = "\n".join(sections[name]).strip()
         if content:
-            parts.append("")
+            if not first_section:
+                parts.append("")
+            first_section = False
             parts.append(f"**{name}:**")
             parts.append("")
             parts.append(content)
@@ -229,6 +239,7 @@ def filter_text(
     text: str,
     section_names: list[str] | None = None,
     max_blanks: int = 1,
+    blank_after_title: bool = True,
 ) -> str:
     """Apply all filter steps to the input text."""
     text = strip_wrapping_fences(text)
@@ -238,7 +249,7 @@ def filter_text(
 
     if section_names:
         text = merge_sections(text, section_names)
-        text = ensure_blank_after_title(text)
+        text = ensure_blank_after_title(text, blank_after_title=blank_after_title)
     else:
         text = drop_empty_heading_sections(text)
         text = normalize_section_spacing(text)
@@ -261,6 +272,11 @@ def main():
         default=1,
         help="Maximum consecutive blank lines (default: 1)",
     )
+    parser.add_argument(
+        "--no-blank-after-title",
+        action="store_true",
+        help="Do not insert a blank line between title and body (useful for PR descriptions)",
+    )
     args = parser.parse_args()
 
     section_names = None
@@ -268,7 +284,12 @@ def main():
         section_names = [s.strip() for s in args.sections.split(",")]
 
     text = sys.stdin.read()
-    result = filter_text(text, section_names=section_names, max_blanks=args.max_blanks)
+    result = filter_text(
+        text,
+        section_names=section_names,
+        max_blanks=args.max_blanks,
+        blank_after_title=not args.no_blank_after_title,
+    )
     print(result)
 
 
