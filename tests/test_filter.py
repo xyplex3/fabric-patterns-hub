@@ -132,6 +132,22 @@ class TestRemovePlaceholderLines:
         result = remove_placeholder_lines("- No issues found")
         assert result.strip() == ""
 
+    def test_no_files_were_modified(self):
+        result = remove_placeholder_lines(
+            "- No existing files were modified; all additions introduce new functionality"
+        )
+        assert result.strip() == ""
+
+    def test_no_files_were_removed(self):
+        result = remove_placeholder_lines(
+            "- No files or functionality were removed in this update"
+        )
+        assert result.strip() == ""
+
+    def test_no_code_was_changed(self):
+        result = remove_placeholder_lines("No existing code was modified")
+        assert result.strip() == ""
+
     def test_preserves_real_content(self):
         text = "- SQL injection in handler.go"
         assert remove_placeholder_lines(text) == text
@@ -306,6 +322,31 @@ class TestFilterTextIntegration:
         assert "**Removed:**" not in result
         assert "```" not in result
 
+    def test_commit_filter_drops_verbose_placeholders(self):
+        """Commit filter should drop verbose LLM placeholders and have blank after title."""
+        text = (
+            "feat: add GitHub Actions workflows\n\n"
+            "**Added:**\n\n"
+            "- New workflow files\n\n"
+            "**Changed:**\n\n"
+            "- No existing files were modified; all additions introduce new functionality\n\n"
+            "**Removed:**\n\n"
+            "- No files or functionality were removed in this update"
+        )
+        result = filter_text(
+            text,
+            section_names=["Added", "Changed", "Removed"],
+            max_blanks=2,
+        )
+        assert "**Changed:**" not in result
+        assert "**Removed:**" not in result
+        assert "**Added:**" in result
+        # Commit messages need a blank line after title
+        lines = result.split("\n")
+        assert lines[0] == "feat: add GitHub Actions workflows"
+        assert lines[1] == ""
+        assert lines[2] == "**Added:**"
+
     def test_pr_filter(self):
         text = (
             "feat: new API\n\n"
@@ -391,6 +432,33 @@ class TestFilterTextIntegration:
     def test_title_only(self):
         result = filter_text("feat: small fix", section_names=["Added", "Changed", "Removed"])
         assert result == "feat: small fix"
+
+    def test_pr_filter_drops_verbose_placeholders(self):
+        """Placeholder lines like 'No existing files were modified' should be removed."""
+        text = (
+            "feat: add GitHub Actions workflows\n\n"
+            "**Key Changes:**\n\n"
+            "- Introduced GitHub Actions workflows\n\n"
+            "**Added:**\n\n"
+            "- New labeler config\n\n"
+            "**Changed:**\n\n"
+            "- No existing files were modified; all additions introduce new functionality\n\n"
+            "**Removed:**\n\n"
+            "- No files or functionality were removed in this update"
+        )
+        result = filter_text(
+            text,
+            section_names=["Key Changes", "Added", "Changed", "Removed"],
+            blank_after_title=False,
+        )
+        assert "**Changed:**" not in result
+        assert "**Removed:**" not in result
+        assert "**Key Changes:**" in result
+        assert "**Added:**" in result
+        # No blank line between title and first section for PR
+        lines = result.split("\n")
+        assert lines[0] == "feat: add GitHub Actions workflows"
+        assert lines[1] == "**Key Changes:**"
 
     def test_no_trailing_whitespace_in_output(self):
         text = "# Review   \n\nContent here   \n\nMore content  "
