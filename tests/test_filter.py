@@ -139,9 +139,7 @@ class TestRemovePlaceholderLines:
         assert result.strip() == ""
 
     def test_no_files_were_removed(self):
-        result = remove_placeholder_lines(
-            "- No files or functionality were removed in this update"
-        )
+        result = remove_placeholder_lines("- No files or functionality were removed in this update")
         assert result.strip() == ""
 
     def test_no_code_was_changed(self):

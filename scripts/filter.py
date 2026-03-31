@@ -62,7 +62,8 @@ def remove_placeholder_lines(text: str) -> str:
         r"^\s*(No |Nothing )(content|features|code|changes|added|was added|"
         r"changed|was changed|removed|was removed).*$",
         # "No existing files were modified", "No files or functionality were removed", etc.
-        r"^\s*-?\s*No [\w ]+ (?:was|were) (?:modified|removed|changed|added|updated|deleted|introduced)\b.*$",
+        r"^\s*-?\s*No [\w ]+ (?:was|were) "
+        r"(?:modified|removed|changed|added|updated|deleted|introduced)\b.*$",
         # "[No CRITICAL findings]", "[None found]", "[No issues found]"
         r"^\s*\[No \w+ (issues|findings)\]\s*$",
         r"^\s*\[(None found|No issues found)\]\s*$",
