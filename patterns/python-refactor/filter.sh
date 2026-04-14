@@ -59,3 +59,7 @@ content=$(echo "$content" | sed -e :a -e '/^\n*$/{$d;N;ba' -e '}')
 # Output the cleaned content
 echo "$content"
 echo
+#!/bin/bash
+# Post-processing filter for pattern output
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+exec python3 "$SCRIPT_DIR/../../scripts/filter.py"
